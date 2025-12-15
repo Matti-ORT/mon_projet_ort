@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+
+{% block body %}
+    <h1>Liste des Recettes</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>recette</th>
+                <th>Ingrédients</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for recette in recettes %}
+                <tr>
+                    <td>{{ recette.nom }}</td>
+                    <td>
+                        <ul>
+                            {% for ingredient_recette in recette.ingredientRecettes %}
+                                <li>
+                                    <strong>{{ ingredient_recette.ingredient.nom }}</strong> :
+                                    {{ingredient_recette.quantite}} 
+                                    {% if ingredient_recette.typeQuantite is not null %}
+                                        {{ ingredient_recette.typeQuantite.libelle }}
+                                    {% endif %}
+                                </li>
+                            {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_recettes_recettes_details_get', {'id': recette.id}) }}">Détails</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4">Aucune recette trouvée.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
