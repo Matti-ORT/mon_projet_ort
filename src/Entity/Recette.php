@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\Enum\NiveauRecettesEnums;
 
 #[ORM\Entity(repositoryClass: \App\Repository\RecetteRepository::class)]
 class Recette
@@ -26,15 +27,23 @@ class Recette
     
     // nouvelle fonctionnalité
 
-    private ?int $nb_personnes = null;
-    private ?NiveauRecettesEnums $niveau = null;
+	#[ORM\Column(type: 'integer', nullable: true)]
+	private ?int $nbPersonnes = null;
 
-    private ?int $temps_de_repos;
-    private ?string $photo = null;
+	#[ORM\Column(enumType: NiveauRecettesEnums::class, nullable: true)]
+	private ?NiveauRecettesEnums $niveau = null;
 
+	#[ORM\Column(type: 'integer', nullable: true)]
+	private ?int $tempsDeRepos = null;
 
-    #[ORM\ManyToMany(targetEntity: Categorie::class)]
-    private Collection $categories;
+	#[ORM\Column(type: 'string', length: 255, nullable: true)]
+	private ?string $photo = null;
+
+	#[ORM\ManyToMany(targetEntity: Categorie::class)]
+	private Collection $categories;
+
+	#[ORM\ManyToOne(targetEntity: Categorie::class)]
+	private ?Categorie $categorie = null;
 
 
 
@@ -96,32 +105,66 @@ class Recette
     // nouvelle fonctionnalité
 
 
-    // nombre de personnes
-	public function getnbperonnes(): int
-    {
-        return $this->nb_personnes;
-    }
+	// nombre de personnes
+	public function getNbPersonnes(): ?int
+	{
+		return $this->nbPersonnes;
+	}
+
+	public function setNbPersonnes(?int $nbPersonnes): self
+	{
+		$this->nbPersonnes = $nbPersonnes;
+		return $this;
+	}
+
+	// niveau de la recette
+	public function getNiveau(): ?NiveauRecettesEnums
+	{
+		return $this->niveau;
+	}
+
+	public function setNiveau(?NiveauRecettesEnums $niveau): self
+	{
+		$this->niveau = $niveau;
+		return $this;
+	}
+
+	
 
 
-    // temps de repos
+	// temps de repos
+	public function getTempsDeRepos(): ?int
+	{
+		return $this->tempsDeRepos;
+	}
 
-    public function gettempsderepos(): int
-    {
-        return $this->temps_de_repos;
-    }
+	public function setTempsDeRepos(?int $tempsDeRepos): self
+	{
+		$this->tempsDeRepos = $tempsDeRepos;
+		return $this;
+	}
 
-    // Photo
-    public function getphoto(): string
-    {
-        return $this->photo;
-    }
+	// Photo
+	public function getPhoto(): ?string
+	{
+		return $this->photo;
+	}
 
+	public function setPhoto(?string $photo): self
+	{
+		$this->photo = $photo;
+		return $this;
+	}
 
-    // Catergorie
+	// Categorie
+	public function getCategorie(): ?Categorie
+	{
+		return $this->categorie;
+	}
 
-    public function getcategorie(): string
-    {
-        return $this->categorie;
-    }
-
+	public function setCategorie(?Categorie $categorie): self
+	{
+		$this->categorie = $categorie;
+		return $this;
+	}
 }

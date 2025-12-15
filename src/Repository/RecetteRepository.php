@@ -22,9 +22,9 @@ class RecetteRepository extends ServiceEntityRepository
     public function getAllForeListe(): array
     {
         return $this-> createQueryBuilder('r')
-            ->innerJoin('r.ingredientRecettes', 'i_r')
+            ->leftJoin('r.ingredientRecettes', 'i_r')
             ->addSelect('i_r')
-            ->INNERJoin('i_r.ingredient', 'i')
+            ->leftJoin('i_r.ingredient', 'i')
             ->addSelect('i')
             ->leftJoin('i_r.typeQuantite', 'qt_t')
             ->addSelect('qt_t')
@@ -39,5 +39,27 @@ class RecetteRepository extends ServiceEntityRepository
             
     }
 
-   
+    public function getFortDetails(Recette $recette): ?Recette
+    {
+        return $this-> createQueryBuilder('r')
+            ->innerJoin('r.ingredientRecettes', 'i_r')
+            ->addSelect('i_r')
+            ->INNERJoin('i_r.ingredient', 'i')
+            ->addSelect('i')
+            ->leftJoin('i_r.typeQuantite', 'qt_t')
+            ->addSelect('qt_t')
+
+            ->leftJoin('r.etapes', 'e')
+            ->addSelect('e')
+
+            ->leftJoin('r.categorie', 'c')
+            ->addSelect('c')
+
+            ->where('r.id = :id')
+            ->setParameter('id', $recette->getId())
+        
+            ->orderBy('r.nom')
+            ->getQuery()
+            ->getSingleResult();
+    }
 }
